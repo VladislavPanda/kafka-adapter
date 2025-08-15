@@ -1,0 +1,21 @@
+{
+    "name": "vladislav-panda/kafka-adapter",
+    "description": "An adapter package for implementing Kafka basic functionality for consume/produce over rdkafka",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "VladislavPanda\\KafkaAdapter\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "VladislavPanda",
+            "email": "pepartvlad7@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "ext-rdkafka": "*"
+    }
+}
