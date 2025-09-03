@@ -10,4 +10,9 @@ final readonly class BaseAdapter
     {
         return new Producer();
     }
+
+    public static function consumer(): Consumer
+    {
+        return new Consumer();
+    }
 }
