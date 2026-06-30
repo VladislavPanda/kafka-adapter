@@ -6,10 +6,14 @@ namespace VladislavPanda\KafkaAdapter;
 
 use RdKafka\Producer as RdKafkaProducer;
 use RdKafka\Topic;
+use VladislavPanda\KafkaAdapter\Exceptions\FlushException;
+use VladislavPanda\KafkaAdapter\Exceptions\ProduceException;
 
 final class Producer
 {
     private const DEFAULT_MSG_FLAGS = 0;
+
+    private const DEFAULT_POLL_TIMEOUT_MS = 0;
 
     private Configuration $configuration;
 
@@ -52,8 +56,20 @@ final class Producer
 
     public function produce(int $timeoutMs = 1000): void
     {
-        $this->topic->produce(RD_KAFKA_PARTITION_UA, self::DEFAULT_MSG_FLAGS, $this->message, $this->messageKey);
+        try {
+            $this->topic->produce(RD_KAFKA_PARTITION_UA, self::DEFAULT_MSG_FLAGS, $this->message, $this->messageKey);
+        } catch (\Throwable $exception) {
+            throw new ProduceException(previous: $exception);
+        }
 
-        $this->rdKafkaProducer->flush($timeoutMs);
+        $this->rdKafkaProducer->poll(self::DEFAULT_POLL_TIMEOUT_MS);
+
+        $result = $this->rdKafkaProducer->flush($timeoutMs);
+
+        if ($result !== RD_KAFKA_RESP_ERR_NO_ERROR) {
+            throw new FlushException(
+                sprintf("Kafka delivery failed. Error code: %d. Reason: %s", $result, rd_kafka_err2str($result)),
+            );
+        }
     }
 }
