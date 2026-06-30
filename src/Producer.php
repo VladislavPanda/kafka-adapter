@@ -55,7 +55,7 @@ final class Producer
         return $this;
     }
 
-    public function produce(int $timeoutMs = 1000): void
+    public function produce(int $timeoutMs = 1000): true
     {
         try {
             $this->topic->produce(RD_KAFKA_PARTITION_UA, self::DEFAULT_MSG_FLAGS, $this->message, $this->messageKey);
@@ -72,5 +72,7 @@ final class Producer
                 sprintf("Kafka delivery failed. Error code: %d. Reason: %s", $result, rd_kafka_err2str($result)),
             );
         }
+
+        return true;
     }
 }
