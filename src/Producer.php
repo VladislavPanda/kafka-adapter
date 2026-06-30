@@ -39,7 +39,7 @@ final class Producer
         return $this;
     }
 
-    public function produce(int $timeoutMs): void
+    public function produce(int $timeoutMs = 1000): void
     {
         $this->topic->produce(RD_KAFKA_PARTITION_UA, 0, $this->message);
 
