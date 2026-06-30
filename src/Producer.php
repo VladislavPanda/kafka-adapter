@@ -9,6 +9,8 @@ use RdKafka\Topic;
 
 final class Producer
 {
+    private const DEFAULT_MSG_FLAGS = 0;
+
     private Configuration $configuration;
 
     private RdKafkaProducer $rdKafkaProducer;
@@ -16,6 +18,8 @@ final class Producer
     private Topic $topic;
 
     private string $message;
+
+    private ?string $key = null;
 
     public function setConfiguration(array $appliedConfigs): self
     {
@@ -39,9 +43,16 @@ final class Producer
         return $this;
     }
 
+    public function setKey(string $key): Producer
+    {
+        $this->key = $key;
+
+        return $this;
+    }
+
     public function produce(int $timeoutMs = 1000): void
     {
-        $this->topic->produce(RD_KAFKA_PARTITION_UA, 0, $this->message);
+        $this->topic->produce(RD_KAFKA_PARTITION_UA, self::DEFAULT_MSG_FLAGS, $this->message, $this->key);
 
         $this->rdKafkaProducer->flush($timeoutMs);
     }
