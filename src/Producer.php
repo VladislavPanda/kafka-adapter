@@ -19,7 +19,7 @@ final class Producer
 
     private string $message;
 
-    private ?string $key = null;
+    private ?string $messageKey = null;
 
     public function setConfiguration(array $appliedConfigs): self
     {
@@ -43,16 +43,16 @@ final class Producer
         return $this;
     }
 
-    public function setKey(string $key): Producer
+    public function setMessageKey(string $messageKey): Producer
     {
-        $this->key = $key;
+        $this->messageKey = $messageKey;
 
         return $this;
     }
 
     public function produce(int $timeoutMs = 1000): void
     {
-        $this->topic->produce(RD_KAFKA_PARTITION_UA, self::DEFAULT_MSG_FLAGS, $this->message, $this->key);
+        $this->topic->produce(RD_KAFKA_PARTITION_UA, self::DEFAULT_MSG_FLAGS, $this->message, $this->messageKey);
 
         $this->rdKafkaProducer->flush($timeoutMs);
     }
