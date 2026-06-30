@@ -6,6 +6,7 @@ namespace VladislavPanda\KafkaAdapter;
 
 use RdKafka\Producer as RdKafkaProducer;
 use RdKafka\Topic;
+use Throwable;
 use VladislavPanda\KafkaAdapter\Exceptions\FlushException;
 use VladislavPanda\KafkaAdapter\Exceptions\ProduceException;
 
@@ -58,7 +59,7 @@ final class Producer
     {
         try {
             $this->topic->produce(RD_KAFKA_PARTITION_UA, self::DEFAULT_MSG_FLAGS, $this->message, $this->messageKey);
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             throw new ProduceException(previous: $exception);
         }
 
